@@ -91,7 +91,7 @@
       //分页查询
       changePage: function (page) {
         this.params.page = page;
-        this.query()
+        this.query();
       },
       handleSizeChange(size) {
         this.params.size = size;
