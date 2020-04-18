@@ -2,7 +2,9 @@ package com.xuecheng.manage_cms.service;
 
 import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
+import com.xuecheng.framework.domain.cms.response.CmsCode;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
+import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.QueryResult;
@@ -81,15 +83,14 @@ public class CmsPageService {
     public CmsPageResult add(CmsPage cmsPage) {
         //页面名称、站点Id、页面webpath为唯一索引
         CmsPage resultCmsPage = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath());
-        if (resultCmsPage == null) {
-            //防止页面插入新主键，在这里将主键设置为空
-            cmsPage.setPageId(null);
-            //新增
-            CmsPage saveCmsPage = cmsPageRepository.save(cmsPage);
-            return new CmsPageResult(CommonCode.SUCCESS, saveCmsPage);
+        if (resultCmsPage != null) {
+            ExceptionCast.cast(CmsCode.CMS_ADDPAGE_EXISTSNAME);
         }
-        //添加失败
-        return new CmsPageResult(CommonCode.FAIL, null);
+        //防止页面插入新主键，在这里将主键设置为空
+        cmsPage.setPageId(null);
+        //新增
+        CmsPage saveCmsPage = cmsPageRepository.save(cmsPage);
+        return new CmsPageResult(CommonCode.SUCCESS, saveCmsPage);
     }
 
     //根据ID查询页面
