@@ -8,7 +8,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="选择模板" prop="templateId">
-        <el-select v-model="pageForm.region" placeholder="请选择模板">
+        <el-select v-model="pageForm.templateId" placeholder="请选择模板">
           <el-option v-for="item in templateList" :key="item.templateId" :label="item.templateName"
                      :value="item.templateId">
           </el-option>
@@ -77,6 +77,17 @@
         }
       }
     },
+    created() {
+      //查询站点列表
+      cmsApi.site_list().then((res)=>{
+        this.siteList = res.queryResult.list;
+      })
+      //查询模板列表
+      cmsApi.template_list().then((res)=>{
+        this.templateList = res.queryResult.list;
+
+      })
+    },
     methods: {
       addSubmit() {
         this.$refs.pageForm.validate((valid) => {
@@ -85,6 +96,7 @@
               cmsApi.page_add(this.pageForm).then((res) => {
                 console.log(res);
                 if (res.success) {
+                  this.go_back();
                   this.$message({
                     message: '提交成功',
                     type: 'success'

@@ -2,11 +2,13 @@ package com.xuecheng.manage_cms.dao;
 
 import com.xuecheng.framework.domain.cms.CmsPage;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author: Yizq
  * @data: 2020/4/12 17:02
  */
+@Repository
 public interface CmsPageRepository extends MongoRepository<CmsPage, String> {
 
 

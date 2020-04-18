@@ -10,5 +10,14 @@ export const page_list = (page, size, params) => {
 }
 
 export const page_add = params =>{
-  return htts.requestPost(apiUrl + '/cms/page/add', params);
+  return http.requestPost(apiUrl + '/cms/page/add', params);
 }
+
+export const site_list = ()=>{
+  return http.requestGet(apiUrl + '/cms/site/list');
+}
+
+export const template_list = () => {
+  return http.requestGet(apiUrl + '/cms/template/list');
+
+};

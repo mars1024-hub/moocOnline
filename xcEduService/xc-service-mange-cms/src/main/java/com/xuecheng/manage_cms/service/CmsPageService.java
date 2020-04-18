@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
  * @data: 2020/4/13 20:16
  */
 @Service
-public class PageService {
+public class CmsPageService {
     @Autowired
     CmsPageRepository cmsPageRepository;
 

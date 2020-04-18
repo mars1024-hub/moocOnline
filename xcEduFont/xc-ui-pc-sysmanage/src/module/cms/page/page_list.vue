@@ -1,7 +1,7 @@
 <template>
   <div style="margin-top: 20px">
 
-    <el-form :model="params" >
+    <el-form :model="params">
       <span style="margin-left: 10px"></span>
       站点：
       <el-select v-model="params.siteId" placeholder="请选择站点" size="small">
@@ -80,6 +80,9 @@
     },
     mounted() {
       this.query();
+      cmsApi.site_list().then((res) => {
+        this.siteList = res.queryResult.list;
+      })
     },
     created() {
       this.params.page = Number.parseInt(this.$route.query.page || 1);
@@ -98,23 +101,22 @@
         this.query();
       },
       query: function () {
-
         cmsApi.page_list(this.params.page, this.params.size, this.params).then((res) => {
-          this.total = res.queryResult.total;
           this.tableData = res.queryResult.list;
-          let item = {};
-          for (let i = 0; i < res.queryResult.list.length; i++) {
-            item = res.queryResult.list[i];
-            if (this.siteList.length === 0) {
-              this.siteList.push(item);
-            } else {
-              for (let j = 0; j < this.siteList.length; j++) {
-                if (this.siteList[j].siteName !== item.siteName) {
-                  this.siteList.push(item);
-                }
-              }
-            }
-          }
+          this.total = res.queryResult.total;
+          // let item = {};
+          // for (let i = 0; i < res.queryResult.list.length; i++) {
+          //   item = res.queryResult.list[i];
+          //   if (this.siteList.length === 0) {
+          //     this.siteList.push(item);
+          //   } else {
+          //     for (let j = 0; j < this.siteList.length; j++) {
+          //       if (this.siteList[j].siteName !== item.siteName) {
+          //         this.siteList.push(item);
+          //       }
+          //     }
+          //   }
+          // }
           this.loading = false;
         })
       }
