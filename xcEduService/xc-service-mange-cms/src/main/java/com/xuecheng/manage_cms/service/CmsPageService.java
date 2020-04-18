@@ -15,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * @author: Yizq
  * @data: 2020/4/13 20:16
@@ -90,4 +92,52 @@ public class CmsPageService {
         return new CmsPageResult(CommonCode.FAIL, null);
     }
 
+    //根据ID查询页面
+    public CmsPage getById(String id) {
+        Optional<CmsPage> optional = cmsPageRepository.findById(id);
+        if (optional.isPresent()) {
+            return optional.get();
+        }
+        return null;
+    }
+
+    //更新页面信息
+    public CmsPageResult update(String id, CmsPage cmsPage) {
+        //根据id查询页面信息
+        CmsPage one = this.getById(id);
+        if (one != null) {
+            //更新模板ID
+            one.setTemplateId(cmsPage.getTemplateId());
+            //更新所属站点
+            one.setSiteId(cmsPage.getSiteId());
+            //更新页面别名
+            one.setPageAliase(cmsPage.getPageAliase());
+            //更新页面名称
+            one.setPageName(cmsPage.getPageName());
+            //更新访问路径
+            one.setPageWebPath(cmsPage.getPageWebPath());
+            //更新物理路径
+            one.setPagePhysicalPath(cmsPage.getPagePhysicalPath());
+            //执行更新
+            CmsPage save = cmsPageRepository.save(one);
+            if (save != null) {
+                //返回结果
+                return new CmsPageResult(CommonCode.SUCCESS, save);
+
+            }
+        }
+        //返回失败
+        return new CmsPageResult(CommonCode.FAIL, null);
+
+    }
+
+    //删除
+    public CmsPageResult delete(String id) {
+        CmsPage result = this.getById(id);
+        if (result != null) {
+            cmsPageRepository.delete(result);
+            return new CmsPageResult(CommonCode.SUCCESS, null);
+        }
+        return new CmsPageResult(CommonCode.FAIL, null);
+    }
 }

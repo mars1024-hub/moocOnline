@@ -38,10 +38,9 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="go_back">返回</el-button>
-        <el-button type="primary" @click="addSubmit">提交</el-button>
+        <el-button type="primary" @click="editSubmit">提交</el-button>
       </el-form-item>
     </el-form>
-
   </div>
 </template>
 <script>
@@ -55,7 +54,7 @@
         siteList: [],
         //模版列表
         templateList: [],
-        //新增界面数据
+        pageId: '',
         pageForm: {
           siteId: '',
           templateId: '',
@@ -77,23 +76,28 @@
         }
       }
     },
-    created() {
+    created: function () {
+      this.pageId = this.$route.params.pageId;
       //查询站点列表
-      cmsApi.site_list().then((res)=>{
+      cmsApi.site_list().then((res) => {
         this.siteList = res.queryResult.list;
       })
       //查询模板列表
-      cmsApi.template_list().then((res)=>{
+      cmsApi.template_list().then((res) => {
         this.templateList = res.queryResult.list;
 
       })
+      cmsApi.page_get(this.pageId).then((res) => {
+        this.pageForm = res;
+      })
+
     },
     methods: {
-      addSubmit() {
+      editSubmit() {
         this.$refs.pageForm.validate((valid) => {
           if (valid) {
             this.$confirm('确认提交吗？', '提示', {}).then(() => {
-              cmsApi.page_add(this.pageForm).then((res) => {
+              cmsApi.page_edit(this.pageId, this.pageForm).then((res) => {
                 console.log(res);
                 if (res.success) {
                   this.go_back();
@@ -101,7 +105,7 @@
                     message: '提交成功',
                     type: 'success'
                   })
-                  this.$refs['pageForm'].resetFields();
+                  this.go_back();
                 } else {
                   this.$message.error('提交失败');
                 }

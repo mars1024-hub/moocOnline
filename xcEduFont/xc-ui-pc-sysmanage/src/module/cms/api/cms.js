@@ -19,5 +19,14 @@ export const site_list = ()=>{
 
 export const template_list = () => {
   return http.requestGet(apiUrl + '/cms/template/list');
-
 };
+
+export const page_get = id =>{
+  return http.requestQuickGet(apiUrl + "/cms/page/get/" + id);
+}
+export const page_edit = (id,params) =>{
+  return http.requestPut(apiUrl + "/cms/page/edit/" + id, params);
+}
+export const page_del = id =>{
+  return http.requestDelete(apiUrl + "/cms/page/del/" + id);
+}

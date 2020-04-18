@@ -17,9 +17,10 @@
       <el-input v-model="params.pageAliase" style="width: 100px" size="small" label-width="20px"></el-input>
       <el-button type="primary" size="small" icon="el-icon-search" v-on:click="query" style="margin-left: 10px;">查询
       </el-button>
+      <el-button v-on:click="cancelFun" size="small">取消</el-button>
       <router-link
         :to="{path:'/cms/page/add/',query:{page:this.params.page,size:this.params.size,siteId:this.params.siteId,pageAliase:this.params.pageAliase}}">
-        <el-button type="primary" size="small" icon="el-icon-circle-plus-outline" style="float: right">新增页面</el-button>
+        <el-button type="primary" size="small" icon="el-icon-circle-plus-outline" style="float: right">新增</el-button>
       </router-link>
     </el-form>
     <el-table
@@ -41,6 +42,15 @@
       <el-table-column prop="pageCreateTime"  label="创建时间"  width="300"  >    
       </el-table-column>
        
+      <el-table-column
+        fixed="right"
+        label="操作"
+        width="100">
+        <template slot-scope="page">
+          <el-button type="text" @click="edit(page.row.pageId)" size="small">编辑</el-button>
+          <el-button type="text" @click="del(page.row.pageId)" size="small">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <!--分页-->
     <el-pagination
@@ -104,21 +114,42 @@
         cmsApi.page_list(this.params.page, this.params.size, this.params).then((res) => {
           this.tableData = res.queryResult.list;
           this.total = res.queryResult.total;
-          // let item = {};
-          // for (let i = 0; i < res.queryResult.list.length; i++) {
-          //   item = res.queryResult.list[i];
-          //   if (this.siteList.length === 0) {
-          //     this.siteList.push(item);
-          //   } else {
-          //     for (let j = 0; j < this.siteList.length; j++) {
-          //       if (this.siteList[j].siteName !== item.siteName) {
-          //         this.siteList.push(item);
-          //       }
-          //     }
-          //   }
-          // }
           this.loading = false;
         })
+      },
+      cancelFun: function () {
+        this.loading = true;
+        this.params.siteId = "";
+        this.params.pageAliase = "";
+        this.query();
+        this.loading = false;
+      },
+      edit: function (pageId) {
+        console.log(pageId);
+        this.$router.push({
+          path: '/cms/page/edit/' + pageId,
+          query: {
+            page: this.params.page,
+            siteId: this.params.siteId
+          }
+
+        })
+      },
+      del:function (pageId) {
+        this.$confirm('确认删除吗？', '提示', {}).then(() => {
+          cmsApi.page_del(pageId).then((res) => {
+            if (res.success) {
+              this.$message({
+                message: '删除成功',
+                type: 'success'
+              })
+              this.query();
+            } else {
+              this.$message.error('提交失败');
+            }
+          })
+        })
+
       }
     }
   }
