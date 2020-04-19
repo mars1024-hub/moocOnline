@@ -7,7 +7,7 @@ import com.xuecheng.framework.model.response.ResultCode;
  * @data: 2020/4/18 21:16
  * @deprecated 异常处理类
  */
-
+@Deprecated
 public class CustomException extends RuntimeException {
     //错误代码
     ResultCode resultCode;

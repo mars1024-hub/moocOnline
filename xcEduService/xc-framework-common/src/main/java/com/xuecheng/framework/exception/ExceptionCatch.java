@@ -37,7 +37,7 @@ public class ExceptionCatch {
 
 
     //捕获不可预知异常
-    @ExceptionHandler(CustomException.class)
+    @ExceptionHandler(Exception.class)
     @ResponseBody//将错误信息转换为JSON
     public ResponseResult exception(Exception exception) {
         LOGGER.error("catch exception:{}", exception.getMessage());
