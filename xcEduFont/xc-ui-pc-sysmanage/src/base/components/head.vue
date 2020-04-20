@@ -167,7 +167,7 @@
   img {
     width: 200px;
     float: left;
-    margin: 10px 10px 10px 18px;
+    margin: 1px 10px 10px 18px;
   }
   .txt {
     color: #fff;
